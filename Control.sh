@@ -25,6 +25,7 @@ if [ $Counter -eq 6 ] #$?Da el estatus de salida del comando anterior
 			bash ./conexionsshp.sh $1
 			bash ./BorrarT.sh $1
 			echo "Se ha borrado la imagen de cada una de las raspberrys."
+			bash ./DiaFoto.sh $1
 			bash ./ApagadoT.sh
 			exit 0
 		else

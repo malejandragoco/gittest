@@ -10,7 +10,7 @@
 
 NombreFoto=$1
 scriptntp="ntpq -p"
-scriptfoto="raspistill -w 800 -h 600 -hf -vf -ISO 800 -t 1000 -o $1.jpg"
+scriptfoto="raspistill -w 800 -h 600 -hf -ISO 800 -t 125 -q 60 -ex off -awb sun -ss 30000 -o $1.jpg"
 
 parallel --tag --nonall -S 4/pi1@192.168.2.111,4/pi2@192.168.2.112,4/pi3@192.168.2.113,4/pi4@192.168.2.114,4/pi5@192.168.2.115 "${scriptntp}"
 

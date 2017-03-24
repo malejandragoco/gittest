@@ -1,5 +1,5 @@
 #!/bin/bash
 
-convert ~/Documentos/Rasp1/$1.jpg ~/Documentos/Rasp2/$1.jpg ~/Documentos/Rasp3/$1.jpg ~/Documentos/Rasp4/$1.jpg ~/Documentos/Rasp5/$1.jpg +append ~/Documentos/mosaicos/$1.jpg
+convert ~/Documentos/Rasp1/$12000.jp2 ~/Documentos/Rasp2/$12000.jp2  ~/Documentos/Rasp3/$12000.jp2  ~/Documentos/Rasp4/$12000.jp2  ~/Documentos/Rasp5/$12000.jp2  +append ~/Documentos/mosaicos/$12000.jp2 
 
-shotwell ~/Documentos/mosaicos/$1.jpg
+eog ~/Documentos/mosaicos/$12000.jp2 

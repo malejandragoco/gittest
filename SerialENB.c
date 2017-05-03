@@ -6,9 +6,11 @@
 
                                         // gcc -o nobloqueante nobloqueante.c
 #define __LINUX_COM__
+#include <bcm2835.h>
 #include <stdlib.h>
 #include "LnxCOMM.1.06/com/serial.h"
 
+#define PIN RPI_GPIO_P1_11
 #define E1 	10		//definicion estado 1
 #define E2 	20		//definicion estado 2
 #define E31 	31		//definicion sub estado 3.1
@@ -45,7 +47,8 @@ void Procesador_Pal(unsigned char P[], Com *com);
 
 int main()
 {
-
+    bcm2835_init();
+    bcm2835_gpio_fsel(PIN, BCM2835_GPIO_FSEL_OUTP);
     int var;					//variable donde se retorna la funcion inicializador 
     int c=0;
     Com com;
@@ -59,12 +62,13 @@ int main()
     DCB OldConf;
     char cad[1];
     int n;
-    int status=system("stty -F /dev/ttyS0 1000000");
+    int statu=system("sudo chmod o+rw /dev/ttyS0");
     fd=Open_Port("/dev/ttyS0");         // Abre el puerto serie.
 
     OldConf=Get_Configure_Port(fd);     // Guardo la configuración del puerto.
     Configure_Port(fd,B1000000,"8N1");  // Configuro el puerto serie.
     IO_Blocking(fd,FALSE);              // Seleccionamos lectura no bloqueante.
+    bcm2835_gpio_write(PIN, LOW);
     while(Kbhit_Port(fd)<1);            // Espero a leer hasta que se tengan
     while(c==0)
     {                                        // 16 bytes en el buffer de entrada.
@@ -211,12 +215,12 @@ void Procesador_Pal(unsigned char P[], Com *com)
 		break;
 		case E32:
                         printf("SE TOMA FOTO\n");
-                 	int foto=system("raspistill -hf -vf -w 800 -h 600 -ISO 80 -n -t 125 -q 40 -ex off -ss 5000 -o hello.jpg");
+                 	int foto=system("raspistill -w 800 -h 600 -ISO 80 -n -t 125 -q 40 -ex off -ss 5000 -o protocolo2.jpg");
                         if(foto==1)
                         {
                                 printf("NO SE TOMO LA FOTO\n");
                         }
-                        int hora=system("identify -verbose hello.jpg | grep exif:DateTimeOriginal:");
+                        int hora=system("identify -verbose protocolo2.jpg | grep exif:DateTimeOriginal:");
                         if(hora==1)
                         {
                                 printf("NO SE SACO EL EXIF\n");
@@ -255,11 +259,11 @@ void Procesador_Pal(unsigned char P[], Com *com)
 
 		break;
 		case E43:
-			hora0=system("identify -verbose hello.jpg | grep exif:DateTimeOriginal:");
-			snprintf(fecha,sizeof(fecha),"exiftool -AllDates='%d%d%d%d:%d%d:%d%d %d%d:%d%d:%d%d' -overwrite_original hello.jpg",(int)com->buffer[2],(int)com->buffer[3],(int)com->buffer[4],(int)com->buffer[5],(int)com->buffer[6],(int)com->buffer[7],(int)com->buffer[8],(int)com->buffer[9],(int)com->buffer[10],(int)com->buffer[11],(int)com->buffer[12],(int)com->buffer[13],(int)com->buffer[14],(int)com->buffer[15]);
+			hora0=system("identify -verbose protocolo2.jpg | grep exif:DateTimeOriginal:");
+			snprintf(fecha,sizeof(fecha),"exiftool -AllDates='%d%d%d%d:%d%d:%d%d %d%d:%d%d:%d%d' -overwrite_original protocolo2.jpg",(int)com->buffer[2],(int)com->buffer[3],(int)com->buffer[4],(int)com->buffer[5],(int)com->buffer[6],(int)com->buffer[7],(int)com->buffer[8],(int)com->buffer[9],(int)com->buffer[10],(int)com->buffer[11],(int)com->buffer[12],(int)com->buffer[13],(int)com->buffer[14],(int)com->buffer[15]);
 			hora2=system(fecha);
 			printf("%s\n",fecha);
-			hora3=system("identify -verbose hello.jpg | grep exif:DateTimeOriginal:");
+			hora3=system("identify -verbose protocolo2.jpg | grep exif:DateTimeOriginal:");
 			if(hora2==1)
 			{
 				printf("NO SE MODIFICO EL EXIF\n");
@@ -300,14 +304,14 @@ void Procesador_Pal(unsigned char P[], Com *com)
 			uni =(com->buffer[5]&0xFF)|((com->buffer[4]&0xFF)<<8)|((com->buffer[3]&0xFF)<<16)|((com->buffer[2]&0xFF)<<24);
 			printf("SE TOMA FOTO CON PARAMETRO DE: %d\n",uni);
 			char buf[200];
-			snprintf(buf, sizeof(buf),"raspistill -hf -vf -w 800 -h 600 -ISO 800 -n -t 125 -q 40 -ex off -ss %d -o hello.jpg",uni);
+			snprintf(buf, sizeof(buf),"raspistill -w 800 -h 600 -ISO 800 -n -t 125 -q 40 -ex off -ss %d -o protocolo2.jpg",uni);
 			//printf("Instruc es: %s\n",buf);
 			int foto1=system(buf);
 			if(foto1==1)
 			{
 				printf("NO SE TOMO LA FOTO\n");
 			}
-			int hora1=system("identify -verbose hello.jpg | grep exif:DateTimeOriginal:");
+			int hora1=system("identify -verbose protocolo2.jpg | grep exif:DateTimeOriginal:");
 			if(hora1==1)
 			{
 				printf("NO SE SACO EL EXIF\n");

@@ -27,10 +27,9 @@
 int check(int longitud, char Palabra[], int Checksum);
 
 int main(int argc, char **argv)
-{
+{   printf("Abriendo bcm2835\n");
     bcm2835_init();
     bcm2835_gpio_fsel(PIN, BCM2835_GPIO_FSEL_OUTP);
-    bcm2835_gpio_write(PIN, HIGH);
     int x=0;
     int aux;
 	int vel= 10000;		//velocidad del ss
@@ -55,13 +54,16 @@ int main(int argc, char **argv)
     pal=Palabra;
     pal3=Palabra3;
     pal2=Palabra2;
-
-    int status=system("stty -F /dev/ttyS0 1000000");
+    printf("abierto bcm2835 corriendo comandos de sistema 1\n");
+    int statu=system("sudo chmod o+rw /dev/ttyS0");
+    printf("abierto bcm2835 corriendo comandos de sistema 2\n");
+    printf("abierto bcm2835 corriendo comandos de sistema 3 y abriendo puerto serial...\n");
     fd=Open_Port("/dev/ttyS0");         // Abre el puerto serie.
                                         // fd=Open_Port("/dev/ttyS0");
     OldConf=Get_Configure_Port(fd);     // Guardo la configuración del puerto.
     Configure_Port(fd,B1000000,"8N1");   // Configuro el puerto serie.
     IO_Blocking(fd,FALSE);              // Seleccionamos lectura no bloqueante.
+    bcm2835_gpio_write(PIN, HIGH);
     if(Operacion==OP1)
     {
 		check(LOP1, Palabra, Checksum);
@@ -72,14 +74,13 @@ int main(int argc, char **argv)
 	   		printf("Enviado: %d\n",(int)cad[0]);        // Muestro loas datos.
 	    		x++;
 	    		*pal++;
-			//for(aux=0;aux<350000;aux++);
 		}
-		int foto=system("raspistill -hf -vf -w 800 -h 600 -ISO 800 -n -t 125 -q 40 -ex off 			-ss 5000 -o helloM.jpg");
+		int foto=system("raspistil -w 800 -h 600 -ISO 800 -n -t 125 -q 40 -ex off 			-ss 5000 -o protocolo2.jpg");
 		if(foto==1)
 			{
 				printf("NO SE TOMO LA FOTO\n");
 			}
-		int hora=system("identify -verbose helloM.jpg | grep exif:DateTimeOriginal:");
+		int hora=system("identify -verbose protocolo2.jpg | grep exif:DateTimeOriginal:");
 		if(hora==1)
 			{
 				printf("NO SE SACO EL EXIF\n");
@@ -96,15 +97,16 @@ int main(int argc, char **argv)
 	    		n=Write_Port(fd,cad,1);          	  // Escribo en el puerto serie.
 	   		printf("Enviado: %d\n",(int)cad[0]);        // Muestro los datos.
 	    		x++;
-	    		*pal3++;
-			//for(aux=0;aux<350000;aux++);
+	    		*pal3++;		
 		}
-		int foto1=system("raspistill -hf -vf -w 800 -h 600 -ISO 800 -n -t 125 -q 40 -ex off 			-ss 10000 -o helloM.jpg");
+		//for(aux=0;aux<350000;aux++);
+		delay(10);		
+		int foto1=system("raspistill -w 800 -h 600 -ISO 800 -n -t 125 -q 40 -ex off 			-ss 10000 -o protocolo2.jpg");
 		if(foto1==1)
 			{
 				printf("NO SE TOMO LA FOTO\n");
 			}
-		int hora1=system("identify -verbose helloM.jpg | grep exif:DateTimeOriginal:");
+		int hora1=system("identify -verbose protocolo2.jpg | grep exif:DateTimeOriginal:");
 		if(hora1==1)
 			{
 				printf("NO SE SACO EL EXIF\n");
@@ -120,7 +122,6 @@ int main(int argc, char **argv)
 				printf("Enviado: %d\n",(int)cad[0]);	//Muestro los datos.
 				x++;
 				*pal2++;
-				//for(aux=0;aux<350000;aux++);
 			}
 
 		}else
@@ -137,7 +138,6 @@ int main(int argc, char **argv)
 
     //printf("\nPresione ENTER para terminar\n");
     //getchar();
-    bcm2835_gpio_write(PIN, LOW);
     bcm2835_close();
     return 0;
 }

@@ -4,7 +4,7 @@
 //Pontificia Universidad Javeriana                 //
 /////////////////////////////////////////////////////
 
-                                        // gcc -o nobloqueante nobloqueante.c
+                                    
 #define __LINUX_COM__
 #include <bcm2835.h>
 #include <stdlib.h>
@@ -86,8 +86,6 @@ int main()
                                             // del puerto.
 
     	Close_Port(fd);                     // Cierro el puerto serie.
-    //printf("\nPresione ENTER para terminar\n");
-    //getchar();
 
     return 0;
 }
@@ -215,7 +213,7 @@ void Procesador_Pal(unsigned char P[], Com *com)
 		break;
 		case E32:
                         printf("SE TOMA FOTO\n");
-                 	int foto=system("raspistill -w 800 -h 600 -ISO 80 -n -t 125 -q 40 -ex off -ss 5000 -o protocolo2.jpg");
+                 	int foto=system("raspistill -w 800 -h 600 -ISO 80 -n -t 125 -q 40 -ex off -ss 1200 -o protocolo2.jpg");
                         if(foto==1)
                         {
                                 printf("NO SE TOMO LA FOTO\n");

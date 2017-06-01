@@ -24,13 +24,14 @@ if Contador == 6:
 	os.system("scp /home/tg1628/gittest/PruebaFecha.py pi3@192.168.2.113:~/")
 	os.system("scp /home/tg1628/gittest/PruebaFecha.py pi4@192.168.2.114:~/")
 	os.system("scp /home/tg1628/gittest/PruebaFecha.py pi5@192.168.2.115:~/")
+	print "SE EJECUTA PRUEBAFECHA.PY"
 	os.system("parallel --tag --nonall -S 4/pi1@192.168.2.111,4/pi2@192.168.2.112,4/pi3@192.168.2.113,4/pi4@192.168.2.114,4/pi5@192.168.2.115 python PruebaFecha.py "+argumento+"")
-	#os.system("parallel --tag --nonall -S 4/pi1@192.168.2.111,4/pi2@192.168.2.112,4/pi3@192.168.2.113,4/pi4@192.168.2.114,4/pi5@192.168.2.115 convert ~/"+argumento+".jpg -quality 60 ~/"+argumento+"2000.jp2")
 	os.system("ssh pi1@192.168.2.111 convert /home/pi1/"+argumento+".jpg -quality 60 /home/pi1/"+argumento+"2000.jp2")
 	os.system("ssh pi2@192.168.2.112 convert /home/pi2/"+argumento+".jpg -quality 60 /home/pi2/"+argumento+"2000.jp2")
 	os.system("ssh pi3@192.168.2.113 convert /home/pi3/"+argumento+".jpg -quality 60 /home/pi3/"+argumento+"2000.jp2")
 	os.system("ssh pi4@192.168.2.114 convert /home/pi4/"+argumento+".jpg -quality 60 /home/pi4/"+argumento+"2000.jp2")
 	os.system("ssh pi5@192.168.2.115 convert /home/pi5/"+argumento+".jpg -quality 60 /home/pi5/"+argumento+"2000.jp2")
+	print "FOTO CONVERTIDA FORMATO JPEG2000"
 	os.system("scp pi1@192.168.2.111:~/"+argumento+"2000.jp2  /home/tg1628/Documentos/Rasp1/")
 	os.system("scp pi2@192.168.2.112:~/"+argumento+"2000.jp2  /home/tg1628/Documentos/Rasp2/")
 	os.system("scp pi3@192.168.2.113:~/"+argumento+"2000.jp2  /home/tg1628/Documentos/Rasp3/")

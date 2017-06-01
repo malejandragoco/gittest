@@ -6,7 +6,7 @@ import sys
 nombreimagen = sys.argv[1]+".jpg" 
 
 flag = 1
-hora = 102100900000000
+hora = 212600000000000
 while (flag):
 
 
@@ -14,7 +14,7 @@ while (flag):
 	resultado = int(dia.readline())
 
 	if resultado >= hora:
-		os.system("raspistill -w 800 -h 600 -ISO 800 -n -t 125 -q 40 -ex off -ss 5000 -a 4 -a %s -o "+nombreimagen+"")
+		os.system("raspistill -w 800 -h 600 -ISO 800 -n -t 125 -q 40 -ex off -ss 1200 -o "+nombreimagen+"")
 
 		break 
 	

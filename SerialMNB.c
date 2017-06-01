@@ -4,7 +4,7 @@
 //Pontificia Universidad Javeriana                 //
 /////////////////////////////////////////////////////
 
-                                        // gcc -o nobloqueante nobloqueante.c
+                                     
 #define __LINUX_COM__
 
 #include <bcm2835.h>
@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     char Palabra3[7]={CINICIO,OP3,a,b,c,d,00};
     char Palabra2[17]={CINICIO,OP2,1,9,9,4,0,7,0,6,1,9,4,7,0,9,00};
     char cad[1]={0};
-    int Operacion=OP3;		//IMPORTANTE: poner el codigo de operacion a mandar
+    int Operacion=OP1;		//IMPORTANTE: poner el codigo de operacion a mandar
     int n;
     char *ca;
     char *pal;
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
     printf("abierto bcm2835 corriendo comandos de sistema 2\n");
     printf("abierto bcm2835 corriendo comandos de sistema 3 y abriendo puerto serial...\n");
     fd=Open_Port("/dev/ttyS0");         // Abre el puerto serie.
-                                        // fd=Open_Port("/dev/ttyS0");
+                                        
     OldConf=Get_Configure_Port(fd);     // Guardo la configuración del puerto.
     Configure_Port(fd,B1000000,"8N1");   // Configuro el puerto serie.
     IO_Blocking(fd,FALSE);              // Seleccionamos lectura no bloqueante.
@@ -71,11 +71,12 @@ int main(int argc, char **argv)
     		{
 			*ca=*pal;
 	    		n=Write_Port(fd,cad,1);            // Escribo en el puerto serie.
-	   		printf("Enviado: %d\n",(int)cad[0]);        // Muestro loas datos.
+	   		printf("Enviado: %d\n",(int)cad[0]);        // Muestro los datos.
 	    		x++;
 	    		*pal++;
 		}
-		int foto=system("raspistil -w 800 -h 600 -ISO 800 -n -t 125 -q 40 -ex off 			-ss 5000 -o protocolo2.jpg");
+		delay(10);
+		int foto=system("raspistill -w 800 -h 600 -ISO 800 -n -t 125 -q 40 -ex off -ss 1200 -o protocolo2.jpg");
 		if(foto==1)
 			{
 				printf("NO SE TOMO LA FOTO\n");
@@ -99,7 +100,6 @@ int main(int argc, char **argv)
 	    		x++;
 	    		*pal3++;		
 		}
-		//for(aux=0;aux<350000;aux++);
 		delay(10);		
 		int foto1=system("raspistill -w 800 -h 600 -ISO 800 -n -t 125 -q 40 -ex off 			-ss 10000 -o protocolo2.jpg");
 		if(foto1==1)
@@ -136,8 +136,6 @@ int main(int argc, char **argv)
 
     Close_Port(fd);                     // Cierro el puerto serie.
 
-    //printf("\nPresione ENTER para terminar\n");
-    //getchar();
     bcm2835_close();
     return 0;
 }
